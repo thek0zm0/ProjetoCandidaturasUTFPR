@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ public class CandidaturaActivity extends AppCompatActivity {
 
     private EditText editTextNome, editTextEmpresa;
     private CheckBox checkBoxIndicacao;
+    private RadioGroup radioGroupReg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +23,14 @@ public class CandidaturaActivity extends AppCompatActivity {
         editTextNome = findViewById(R.id.editTextNome);
         editTextEmpresa = findViewById(R.id.editTextEmpresa);
         checkBoxIndicacao = findViewById(R.id.checkBoxIndicacao);
+        radioGroupReg = findViewById(R.id.radioGroupRegime);
     }
 
     public void limparCampos(View view) {
         editTextNome.setText(null);
         editTextEmpresa.setText(null);
         checkBoxIndicacao.setChecked(false);
+        radioGroupReg.clearCheck();
 
         editTextNome.requestFocus();
 
@@ -52,9 +56,21 @@ public class CandidaturaActivity extends AppCompatActivity {
 
         var isIndicacao = checkBoxIndicacao.isActivated();
 
+        var radioButtonId = radioGroupReg.getCheckedRadioButtonId();
+        String regime = "";
+
+        if (R.id.radioButtonPj == radioButtonId) {
+            regime = getString(R.string.pessoaj);
+        } else if (R.id.radioButtonClt == radioButtonId) {
+            regime = getString(R.string.pessoaF);
+        } else {
+            Toast.makeText(this, R.string.favor_selecionar_regime, Toast.LENGTH_LONG).show();
+        }
+
         Toast.makeText(this,
                 getString(R.string.nome_valor) + nome + "\n"
                         + getString(R.string.empresa_valor) + empresa + "\n"
-                        + getString(R.string.indicacao_valor) + isIndicacao, Toast.LENGTH_LONG).show();
+                        + getString(R.string.indicacao_valor) + isIndicacao + "\n"
+                        + getString(R.string.regime_contratacao_valor) + regime, Toast.LENGTH_LONG).show();
     }
 }

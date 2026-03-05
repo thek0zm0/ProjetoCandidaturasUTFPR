@@ -13,4 +13,8 @@
     <string name="empresa_valor">"Empresa: "</string>
     <string name="possui_indicacao">"Possui Indicação "</string>
     <string name="indicacao_valor">"Indicação: "</string>
+    <string name="pessoaj">PJ</string>
+    <string name="pessoaF">CLT</string>
+    <string name="regime_contratacao_valor">"Regime contratação: "</string>
+    <string name="favor_selecionar_regime">Favor selecionar regime.</string>
 </resources>

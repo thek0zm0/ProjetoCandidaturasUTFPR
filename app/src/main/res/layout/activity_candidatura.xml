@@ -71,7 +71,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/buttonSalvar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBoxIndicacao" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupRegime" />
 
     <Button
         android:id="@+id/buttonSalvar"
@@ -94,5 +94,27 @@
         android:text="@string/possui_indicacao"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEmpresa" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupRegime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxIndicacao">
+
+        <RadioButton
+            android:id="@+id/radioButtonClt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pessoaF" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pessoaj" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
