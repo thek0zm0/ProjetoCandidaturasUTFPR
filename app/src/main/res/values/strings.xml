@@ -11,4 +11,6 @@
     <string name="faltou_empresa">Faltou empresa.</string>
     <string name="nome_valor">"Nome: "</string>
     <string name="empresa_valor">"Empresa: "</string>
+    <string name="possui_indicacao">"Possui Indicação "</string>
+    <string name="indicacao_valor">"Indicação: "</string>
 </resources>

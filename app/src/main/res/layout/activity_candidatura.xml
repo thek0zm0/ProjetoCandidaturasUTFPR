@@ -64,7 +64,6 @@
         android:id="@+id/buttonLimpar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
         android:layout_marginEnd="32dp"
         android:onClick="limparCampos"
         android:text="@string/limpar"
@@ -72,7 +71,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/buttonSalvar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmpresa" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxIndicacao" />
 
     <Button
         android:id="@+id/buttonSalvar"
@@ -83,8 +82,17 @@
         android:onClick="salvarValores"
         android:text="@string/salvar"
         app:layout_constraintEnd_toStartOf="@+id/buttonLimpar"
-        app:layout_constraintHorizontal_bias="0.039"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonLimpar" />
+
+    <CheckBox
+        android:id="@+id/checkBoxIndicacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/possui_indicacao"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmpresa" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
