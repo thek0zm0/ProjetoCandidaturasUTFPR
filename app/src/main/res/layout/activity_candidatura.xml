@@ -64,6 +64,7 @@
         android:id="@+id/buttonLimpar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:onClick="limparCampos"
         android:text="@string/limpar"
@@ -71,7 +72,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/buttonSalvar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroupRegime" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerFaixaSalarial" />
 
     <Button
         android:id="@+id/buttonSalvar"
@@ -116,5 +117,28 @@
             android:layout_height="wrap_content"
             android:text="@string/pessoaj" />
     </RadioGroup>
+
+    <Spinner
+        android:id="@+id/spinnerFaixaSalarial"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:entries="@array/faixaSalarios"
+        android:spinnerMode="dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFaixas" />
+
+    <TextView
+        android:id="@+id/textViewFaixas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/faixa_salarial"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupRegime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

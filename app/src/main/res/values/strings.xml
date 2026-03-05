@@ -17,4 +17,9 @@
     <string name="pessoaF">CLT</string>
     <string name="regime_contratacao_valor">"Regime contratação: "</string>
     <string name="favor_selecionar_regime">Favor selecionar regime.</string>
+    <string name="escolaridade">Escolaridade</string>
+    <string name="faixa_salarial">Faixa Salarial</string>
+    <string name="menor_que_5"><![CDATA[<R$ 5.000]]></string>
+    <string name="entre_5_e_10"><![CDATA[>R$ 5.000 && < R$ 10.000]]></string>
+    <string name="maior_que_10"><![CDATA[>R$ 10.000]]></string>
 </resources>
