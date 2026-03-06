@@ -12,8 +12,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.projetocandidaturas"
-        minSdk = 36
-        targetSdk = 36
+        minSdk = 24          // API Level 24 (Android 7.0)
+        targetSdk = 36       // API Level 36 (Android 16.0)
         versionCode = 1
         versionName = "1.0"
 
