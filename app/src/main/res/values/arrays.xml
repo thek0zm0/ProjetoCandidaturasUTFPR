@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="faixaSalarios">
+        <item>@string/menor_que_5</item>
+        <item>@string/entre_5_e_10</item>
+        <item>@string/maior_que_10</item>
+    </string-array>
+
+    <string-array name="nome_cargo">
+        <item>Desenvolvedor Software Java Junior</item>
+        <item>Analista de Dados Pleno</item>
+        <item>Engenheiro de SRE</item>
+        <item>Desenvolvedor Frontend React</item>
+        <item>Product Owner</item>
+        <item>QA Automation Engineer</item>
+        <item>Desenvolvedor Backend Python</item>
+        <item>Mobile Developer iOS</item>
+        <item>Arquiteto de Soluções Cloud</item>
+        <item>UX/UI Designer</item>
+    </string-array>
+
+    <string-array name="empresa">
+        <item>Itau</item>
+        <item>Nubank</item>
+        <item>iFood</item>
+        <item>Mercado Livre</item>
+        <item>Santander</item>
+        <item>Stone</item>
+        <item>PicPay</item>
+        <item>PagBank</item>
+        <item>Vivo</item>
+        <item>Ambev Tech</item>
+    </string-array>
+
+    <integer-array name="indicacao">
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+    </integer-array>
+
+    <integer-array name="regime">
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+    </integer-array>
+
+    <integer-array name="faixas_salarios">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+    </integer-array>
+</resources>

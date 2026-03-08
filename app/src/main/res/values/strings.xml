@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ProjetoCandidaturas</string>
+    <string name="app_name">ListViewResourcesArrays</string>
     <string name="nome">Nome</string>
     <string name="empresa">Empresa</string>
     <string name="limpar">Limpar</string>
