@@ -2,7 +2,6 @@ package com.example.projetocandidaturas;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -10,8 +9,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.ArrayList;
 
 public class CandidaturaActivity extends AppCompatActivity {
 
@@ -67,7 +64,7 @@ public class CandidaturaActivity extends AppCompatActivity {
         String regime = "";
 
         if (R.id.radioButtonPj == radioButtonId) {
-            regime = getString(R.string.pessoaj);
+            regime = getString(R.string.pessoaJ);
         } else if (R.id.radioButtonClt == radioButtonId) {
             regime = getString(R.string.pessoaF);
         } else {

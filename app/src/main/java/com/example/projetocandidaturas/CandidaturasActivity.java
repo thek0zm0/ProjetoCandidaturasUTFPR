@@ -1,14 +1,12 @@
 package com.example.projetocandidaturas;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +15,7 @@ public class CandidaturasActivity extends AppCompatActivity {
 
     private ListView listViewCandidaturas;
     private List<Candidatura> listaCandidaturas;
+    private CandidaturaAdapter candidaturaAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +23,13 @@ public class CandidaturasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_candidaturas);
 
         listViewCandidaturas = findViewById(R.id.listViewCandidaturas);
+
+        listViewCandidaturas.setOnItemClickListener((parent, view, position, id) -> {
+
+            Candidatura candidatura = (Candidatura) listViewCandidaturas.getItemAtPosition(position);
+
+            Toast.makeText(getApplicationContext(), "Cargo \"" + candidatura.getNomeCargo() + "\" foi clicado.", Toast.LENGTH_LONG).show();
+        });
 
         popularListaCandidaturas();
 
@@ -46,16 +52,13 @@ public class CandidaturasActivity extends AppCompatActivity {
             listaCandidaturas.add(new Candidatura(
                     cargosNomes[i],
                     empresas[i],
-                    Boolean.parseBoolean(String.valueOf(indicacoes[i])),
+                    indicacoes[i] == 1,
                     enumRegimesValues[regimes[i]],
                     faixasSalarios[i]));
         }
 
-        ArrayAdapter<Candidatura> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                listaCandidaturas);
+        candidaturaAdapter = new CandidaturaAdapter(this, listaCandidaturas);
 
-        listViewCandidaturas.setAdapter(adapter);
+        listViewCandidaturas.setAdapter(candidaturaAdapter);
     }
 }

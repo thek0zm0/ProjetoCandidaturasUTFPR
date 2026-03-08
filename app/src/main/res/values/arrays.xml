@@ -61,13 +61,13 @@
     <integer-array name="faixas_salarios">
         <item>1</item>
         <item>2</item>
-        <item>3</item>
+        <item>0</item>
         <item>1</item>
         <item>2</item>
-        <item>3</item>
+        <item>0</item>
         <item>1</item>
         <item>2</item>
-        <item>3</item>
+        <item>0</item>
         <item>1</item>
     </integer-array>
 </resources>
