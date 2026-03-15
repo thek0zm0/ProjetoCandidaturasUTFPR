@@ -1,7 +1,9 @@
 package com.example.projetocandidaturas;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -12,6 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class CandidaturaActivity extends AppCompatActivity {
 
+    public static final String KEY_NOME = "KEY_NOME";
+    public static final String KEY_EMPRESA = "KEY_EMPRESA";
+    public static final String KEY_INDICACAO = "KEY_INDICACAO";
+    public static final String KEY_REGIME = "KEY_REGIME";
+    public static final String KEY_FAIXA = "KEY_FAIXA";
     private EditText editTextNome, editTextEmpresa;
     private CheckBox checkBoxIndicacao;
     private RadioGroup radioGroupReg;
@@ -58,32 +65,36 @@ public class CandidaturaActivity extends AppCompatActivity {
             return;
         }
 
-        var isIndicacao = checkBoxIndicacao.isActivated();
+        var isIndicacao = checkBoxIndicacao.isChecked();
 
         var radioButtonId = radioGroupReg.getCheckedRadioButtonId();
-        String regime = "";
+        ERegime regime;
 
         if (R.id.radioButtonPj == radioButtonId) {
-            regime = getString(R.string.pessoaJ);
+            regime = ERegime.PJ;
         } else if (R.id.radioButtonClt == radioButtonId) {
-            regime = getString(R.string.pessoaF);
+            regime = ERegime.CLT;
         } else {
             Toast.makeText(this, R.string.favor_selecionar_regime, Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (spinner.getSelectedItem() == null) {
-            Toast.makeText(this, "Spinner sem valores.", Toast.LENGTH_LONG).show();
+        if (spinner.getSelectedItemPosition() == AdapterView.INVALID_POSITION) {
+            Toast.makeText(this, R.string.spinner_sem_valores, Toast.LENGTH_LONG).show();
             return;
         }
 
-        var faixa = spinner.getSelectedItem().toString();
+        var faixa = spinner.getSelectedItemPosition();
 
-        Toast.makeText(this,
-                getString(R.string.nome_valor) + nome + "\n"
-                        + getString(R.string.empresa_valor) + empresa + "\n"
-                        + getString(R.string.indicacao_valor) + isIndicacao + "\n"
-                        + getString(R.string.regime_contratacao_valor) + regime + "\n"
-                        + "Faixa Selecionada: " + faixa, Toast.LENGTH_LONG).show();
+        Intent intentResposta = new Intent();
+        intentResposta.putExtra(KEY_NOME, nome);
+        intentResposta.putExtra(KEY_EMPRESA, empresa);
+        intentResposta.putExtra(KEY_INDICACAO, isIndicacao);
+        intentResposta.putExtra(KEY_REGIME, regime.toString());
+        intentResposta.putExtra(KEY_FAIXA, faixa);
+
+        setResult(CandidaturaActivity.RESULT_OK, intentResposta);
+
+        finish();
     }
 }

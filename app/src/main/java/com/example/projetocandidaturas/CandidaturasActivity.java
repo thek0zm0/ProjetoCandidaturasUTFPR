@@ -7,6 +7,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -40,24 +44,7 @@ public class CandidaturasActivity extends AppCompatActivity {
 
     private void popularListaCandidaturas() {
 
-        String[] cargosNomes    = getResources().getStringArray(R.array.nome_cargo);
-        String[] empresas       = getResources().getStringArray(R.array.empresa);
-        int[] indicacoes        = getResources().getIntArray(R.array.indicacao);
-        int[] regimes           = getResources().getIntArray(R.array.regime);
-        int[] faixasSalarios    = getResources().getIntArray(R.array.faixas_salarios);
-
         listaCandidaturas = new ArrayList<>();
-
-        var enumRegimesValues = ERegime.values();
-
-        for (int i=0; i<cargosNomes.length; i++) {
-            listaCandidaturas.add(new Candidatura(
-                    cargosNomes[i],
-                    empresas[i],
-                    indicacoes[i] == 1,
-                    enumRegimesValues[regimes[i]],
-                    faixasSalarios[i]));
-        }
 
         candidaturaAdapter = new CandidaturaAdapter(this, listaCandidaturas);
 
@@ -69,5 +56,38 @@ public class CandidaturasActivity extends AppCompatActivity {
         Intent intentAbertura = new Intent(this, SobreActivity.class);
 
         startActivity(intentAbertura);
+    }
+
+    ActivityResultLauncher<Intent> launcherNovaCandidatura = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == CandidaturasActivity.RESULT_OK) {
+                Intent intent = result.getData();
+
+                Bundle bundle = intent.getExtras();
+
+                if (bundle != null) {
+
+                    var nome      = bundle.getString(CandidaturaActivity.KEY_NOME);
+                    var empresa   = bundle.getString(CandidaturaActivity.KEY_EMPRESA);
+                    var indicacao = bundle.getBoolean(CandidaturaActivity.KEY_INDICACAO);
+                    var regime    = bundle.getString(CandidaturaActivity.KEY_REGIME);
+                    var faixa     = bundle.getInt(CandidaturaActivity.KEY_FAIXA);
+
+                    var candidatura = new Candidatura(nome, empresa, indicacao, ERegime.valueOf(regime), faixa);
+
+                    listaCandidaturas.add(candidatura);
+
+                    candidaturaAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    });
+
+    public void abrirNovaCandidatura(View view) {
+
+        Intent intent = new Intent(this, CandidaturaActivity.class);
+
+        launcherNovaCandidatura.launch(intent);
     }
 }
