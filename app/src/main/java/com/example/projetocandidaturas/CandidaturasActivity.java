@@ -1,5 +1,6 @@
 package com.example.projetocandidaturas;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ public class CandidaturasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_candidaturas);
+        setTitle(getString(R.string.controle_de_candidaturas));
 
         listViewCandidaturas = findViewById(R.id.listViewCandidaturas);
 
@@ -60,5 +62,12 @@ public class CandidaturasActivity extends AppCompatActivity {
         candidaturaAdapter = new CandidaturaAdapter(this, listaCandidaturas);
 
         listViewCandidaturas.setAdapter(candidaturaAdapter);
+    }
+
+    public void abrirSobre(View view) {
+
+        Intent intentAbertura = new Intent(this, SobreActivity.class);
+
+        startActivity(intentAbertura);
     }
 }

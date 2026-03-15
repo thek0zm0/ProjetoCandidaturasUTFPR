@@ -24,4 +24,13 @@
     <string name="maior_que_10"><![CDATA[>R$ 10.000]]></string>
     <string name="com_indicacao">Com indicação.</string>
     <string name="sem_indicacao">Sem indicação.</string>
+    <string name="logo_do_projeto">"Logo do Projeto. "</string>
+    <string name="autoria_nome">Autor: Lucas Moraes</string>
+    <string name="autoria_curso">Especialização JAVA</string>
+    <string name="autoria_email">kkoozzmmoo@gmail.com</string>
+    <string name="autoria_descricao">"Aplicativo de acompanhamento de candidaturas em processos seletivos. "</string>
+    <string name="autoria_nome_faculdade">"Universidade Tecnológica Federal do Paraná. "</string>
+    <string name="autoria_logo_faculdade">"Logo da faculdade. "</string>
+    <string name="sobre">Sobre</string>
+    <string name="controle_de_candidaturas">Controle de candidaturas</string>
 </resources>
