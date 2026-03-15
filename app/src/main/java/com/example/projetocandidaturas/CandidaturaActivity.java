@@ -28,6 +28,7 @@ public class CandidaturaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_candidatura);
+        setTitle(getString(R.string.nova_candidatura));
 
         editTextNome      = findViewById(R.id.editTextNome);
         editTextEmpresa   = findViewById(R.id.editTextEmpresa);
