@@ -34,6 +34,7 @@ public class CandidaturaActivity extends AppCompatActivity {
     private Spinner spinner;
     private RadioButton radioButtonPJ, radioButtonCLT;
     private int modo;
+    private Candidatura candidaturaOriginal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,8 @@ public class CandidaturaActivity extends AppCompatActivity {
                 var indicacao = bundle.getBoolean(CandidaturaActivity.KEY_INDICACAO);
                 var regime    = bundle.getString(CandidaturaActivity.KEY_REGIME);
                 var faixa     = bundle.getInt(CandidaturaActivity.KEY_FAIXA);
+
+                candidaturaOriginal = new Candidatura(nome, empresa, indicacao, ERegime.valueOf(regime), faixa);
 
                 editTextNome.setText(nome);
                 editTextEmpresa.setText(empresa);
@@ -133,6 +136,18 @@ public class CandidaturaActivity extends AppCompatActivity {
 
         var faixa = spinner.getSelectedItemPosition();
 
+        if (modo == MODO_EDITAR
+            && nome.equals(candidaturaOriginal.getNomeCargo())
+            && empresa.equals(candidaturaOriginal.getEmpresa())
+            && isIndicacao == candidaturaOriginal.isIndicacao()
+            && regime == candidaturaOriginal.getRegime()
+            && faixa == candidaturaOriginal.getFaixaSalarial()) {
+
+            setResult(CandidaturaActivity.RESULT_CANCELED);
+            finish();
+            return;
+        }
+
         Intent intentResposta = new Intent();
         intentResposta.putExtra(KEY_NOME, nome);
         intentResposta.putExtra(KEY_EMPRESA, empresa);
@@ -165,6 +180,7 @@ public class CandidaturaActivity extends AppCompatActivity {
             limparCampos();
             return true;
         }
-        return true;
+
+        return super.onOptionsItemSelected(item);
     }
 }

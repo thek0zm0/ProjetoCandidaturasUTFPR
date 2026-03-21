@@ -1,14 +1,16 @@
 package com.example.projetocandidaturas;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -16,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,55 @@ public class CandidaturasActivity extends AppCompatActivity {
     private List<Candidatura> listaCandidaturas;
     private CandidaturaAdapter candidaturaAdapter;
     private int posicaoSelecionada = -1;
+    private ActionMode actionMode;
+    private View viewSelecionada;
+    private Drawable background;
+
+    private ActionMode.Callback callback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater menuInflater = mode.getMenuInflater();
+            menuInflater.inflate(R.menu.candidaturas_item_selecionado, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+            int idMenuItem = item.getItemId();
+
+            if (idMenuItem == R.id.menuItemEditar) {
+                editarCandidatura();
+            } else if (idMenuItem == R.id.menuItemExcluir) {
+                excluirCandidatura();
+                mode.finish();
+                return true;
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+            posicaoSelecionada = -1;
+
+            if (viewSelecionada != null) {
+                viewSelecionada.setBackground(background);
+            }
+
+            actionMode = null;
+            viewSelecionada = null;
+            background = null;
+
+            listViewCandidaturas.setEnabled(true);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +87,27 @@ public class CandidaturasActivity extends AppCompatActivity {
 
         listViewCandidaturas = findViewById(R.id.listViewCandidaturas);
 
-        /*
-        listViewCandidaturas.setOnItemClickListener((parent, view, position, id) -> {
+        listViewCandidaturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-            Candidatura candidatura = (Candidatura) listViewCandidaturas.getItemAtPosition(position);
+                if (actionMode != null) {
+                    return false;
+                }
 
-            Toast.makeText(getApplicationContext(), "Cargo \"" + candidatura.getNomeCargo() + "\" foi clicado.", Toast.LENGTH_LONG).show();
-        });*/
+                posicaoSelecionada = position;
+
+                viewSelecionada = view;
+                background = view.getBackground();
+
+                view.setBackgroundColor(Color.LTGRAY);
+
+                listViewCandidaturas.setEnabled(false);
+
+                actionMode = startSupportActionMode(callback);
+
+                return true;
+            }});
 
         popularListaCandidaturas();
 
@@ -131,15 +197,12 @@ public class CandidaturasActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
-        AdapterView.AdapterContextMenuInfo info;
-        info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
         int idMenuItem = item.getItemId();
 
         if (idMenuItem == R.id.menuItemEditar) {
-            editarCandidatura(info.position);
+            editarCandidatura();
         } else if (idMenuItem == R.id.menuItemExcluir) {
-            excluirCandidatura(info.position);
+            excluirCandidatura();
             return true;
         }
 
@@ -175,12 +238,16 @@ public class CandidaturasActivity extends AppCompatActivity {
                     candidaturaAdapter.notifyDataSetChanged();
                 }
             }
+
+            posicaoSelecionada = -1;
+
+            if (actionMode != null) {
+                actionMode.finish();
+            }
         }
     });
 
-    private void editarCandidatura(int position) {
-
-        posicaoSelecionada = position;
+    private void editarCandidatura() {
 
         var candidatura = listaCandidaturas.get(posicaoSelecionada);
 
@@ -196,8 +263,8 @@ public class CandidaturasActivity extends AppCompatActivity {
         launcherEditarCandidatura.launch(intentAbertura);
     }
 
-    private void excluirCandidatura(int position) {
-        listaCandidaturas.remove(position);
+    private void excluirCandidatura() {
+        listaCandidaturas.remove(posicaoSelecionada);
 
         candidaturaAdapter.notifyDataSetChanged();
     }
