@@ -2,15 +2,21 @@ package com.example.projetocandidaturas;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
 
 public class CandidaturaActivity extends AppCompatActivity {
 
@@ -19,10 +25,15 @@ public class CandidaturaActivity extends AppCompatActivity {
     public static final String KEY_INDICACAO = "KEY_INDICACAO";
     public static final String KEY_REGIME = "KEY_REGIME";
     public static final String KEY_FAIXA = "KEY_FAIXA";
+    public static final String KEY_MODO = "KEY_MODO";
+    public static final int MODO_NOVO = 0;
+    public static final int MODO_EDITAR = 1;
     private EditText editTextNome, editTextEmpresa;
     private CheckBox checkBoxIndicacao;
     private RadioGroup radioGroupReg;
     private Spinner spinner;
+    private RadioButton radioButtonPJ, radioButtonCLT;
+    private int modo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +46,44 @@ public class CandidaturaActivity extends AppCompatActivity {
         checkBoxIndicacao = findViewById(R.id.checkBoxIndicacao);
         radioGroupReg     = findViewById(R.id.radioGroupRegime);
         spinner           = findViewById(R.id.spinnerFaixaSalarial);
+        radioButtonPJ     = findViewById(R.id.radioButtonPj);
+        radioButtonCLT    = findViewById(R.id.radioButtonClt);
+
+
+        Intent intentAbertura = getIntent();
+
+        Bundle bundle = intentAbertura.getExtras();
+
+        if (bundle != null) {
+
+            modo = bundle.getInt(KEY_MODO);
+
+            if (modo == MODO_NOVO) {
+                setTitle(getString(R.string.nova_candidatura));
+            } else {
+                setTitle(getString(R.string.editar_candidatura));
+
+                var nome      = bundle.getString(CandidaturaActivity.KEY_NOME);
+                var empresa   = bundle.getString(CandidaturaActivity.KEY_EMPRESA);
+                var indicacao = bundle.getBoolean(CandidaturaActivity.KEY_INDICACAO);
+                var regime    = bundle.getString(CandidaturaActivity.KEY_REGIME);
+                var faixa     = bundle.getInt(CandidaturaActivity.KEY_FAIXA);
+
+                editTextNome.setText(nome);
+                editTextEmpresa.setText(empresa);
+                checkBoxIndicacao.setChecked(indicacao);
+                spinner.setSelection(faixa);
+
+                if (Objects.equals(regime, ERegime.CLT.toString())) {
+                    radioButtonCLT.setChecked(true);
+                } else if (Objects.equals(regime, ERegime.PJ.toString())){
+                    radioButtonPJ.setChecked(true);
+                }
+            }
+        }
     }
 
-    public void limparCampos(View view) {
+    public void limparCampos() {
         editTextNome.setText(null);
         editTextEmpresa.setText(null);
         checkBoxIndicacao.setChecked(false);
@@ -49,7 +95,7 @@ public class CandidaturaActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.as_entrada_foram_apagadas, Toast.LENGTH_LONG).show();
     }
 
-    public void salvarValores(View view) {
+    public void salvarValores() {
 
         var nome    = editTextNome.getText().toString();
         var empresa = editTextEmpresa.getText().toString();
@@ -97,5 +143,28 @@ public class CandidaturaActivity extends AppCompatActivity {
         setResult(CandidaturaActivity.RESULT_OK, intentResposta);
 
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.candidatura_opcoes, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int idMenuItem = item.getItemId();
+
+        if (idMenuItem == R.id.menuItemSalvar) {
+            salvarValores();
+            return true;
+        } else if (idMenuItem == R.id.menuItemLimpar){
+            limparCampos();
+            return true;
+        }
+        return true;
     }
 }

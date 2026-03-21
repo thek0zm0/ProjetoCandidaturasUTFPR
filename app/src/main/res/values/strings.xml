@@ -36,4 +36,7 @@
     <string name="adicionar">Adicionar</string>
     <string name="spinner_sem_valores">Spinner sem valores.</string>
     <string name="nova_candidatura">Nova candidatura</string>
+    <string name="editar">Editar</string>
+    <string name="excluir">Excluir</string>
+    <string name="editar_candidatura">Editar Candidatura</string>
 </resources>
