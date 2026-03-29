@@ -1,6 +1,8 @@
 package com.example.projetocandidaturas;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,21 +22,25 @@ import java.util.Objects;
 
 public class CandidaturaActivity extends AppCompatActivity {
 
-    public static final String KEY_NOME = "KEY_NOME";
-    public static final String KEY_EMPRESA = "KEY_EMPRESA";
-    public static final String KEY_INDICACAO = "KEY_INDICACAO";
-    public static final String KEY_REGIME = "KEY_REGIME";
-    public static final String KEY_FAIXA = "KEY_FAIXA";
-    public static final String KEY_MODO = "KEY_MODO";
-    public static final int MODO_NOVO = 0;
-    public static final int MODO_EDITAR = 1;
-    private EditText editTextNome, editTextEmpresa;
-    private CheckBox checkBoxIndicacao;
-    private RadioGroup radioGroupReg;
-    private Spinner spinner;
-    private RadioButton radioButtonPJ, radioButtonCLT;
-    private int modo;
-    private Candidatura candidaturaOriginal;
+    public static final String KEY_NOME         = "KEY_NOME";
+    public static final String KEY_EMPRESA      = "KEY_EMPRESA";
+    public static final String KEY_INDICACAO    = "KEY_INDICACAO";
+    public static final String KEY_REGIME       = "KEY_REGIME";
+    public static final String KEY_FAIXA        = "KEY_FAIXA";
+    public static final String KEY_MODO         = "KEY_MODO";
+    public static final String KEY_SUGERIR_TIPO = "SUGERIR_TIPO";
+    public static final String KEY_ULTIMO_TIPO  = "ULTIMO_TIPO";
+    public static final int    MODO_NOVO        = 0;
+    public static final int    MODO_EDITAR      = 1;
+    private EditText     editTextNome, editTextEmpresa;
+    private CheckBox     checkBoxIndicacao;
+    private RadioGroup   radioGroupReg;
+    private Spinner      spinner;
+    private RadioButton  radioButtonPJ, radioButtonCLT;
+    private int          modo;
+    private Candidatura  candidaturaOriginal;
+    private boolean      sugerirTipo;
+    private int          ultimoTipo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,7 @@ public class CandidaturaActivity extends AppCompatActivity {
         radioButtonPJ     = findViewById(R.id.radioButtonPj);
         radioButtonCLT    = findViewById(R.id.radioButtonClt);
 
+        lerPreferencias();
 
         Intent intentAbertura = getIntent();
 
@@ -61,6 +68,10 @@ public class CandidaturaActivity extends AppCompatActivity {
 
             if (modo == MODO_NOVO) {
                 setTitle(getString(R.string.nova_candidatura));
+
+                if (sugerirTipo) {
+                    spinner.setSelection(ultimoTipo);
+                }
             } else {
                 setTitle(getString(R.string.editar_candidatura));
 
@@ -148,6 +159,8 @@ public class CandidaturaActivity extends AppCompatActivity {
             return;
         }
 
+        salvarUltimoTipo(faixa);
+
         Intent intentResposta = new Intent();
         intentResposta.putExtra(KEY_NOME, nome);
         intentResposta.putExtra(KEY_EMPRESA, empresa);
@@ -169,6 +182,16 @@ public class CandidaturaActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem item = menu.findItem(R.id.menuItemSugerirTipo);
+
+        item.setChecked(sugerirTipo);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int idMenuItem = item.getItemId();
@@ -179,8 +202,48 @@ public class CandidaturaActivity extends AppCompatActivity {
         } else if (idMenuItem == R.id.menuItemLimpar){
             limparCampos();
             return true;
+        } else {
+            if (idMenuItem == R.id.menuItemSugerirTipo) {
+                boolean valor = !item.isChecked();
+
+                salvarSugerirTipo(valor);
+                item.setChecked(valor);
+
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void lerPreferencias() {
+        SharedPreferences preferences = getSharedPreferences(CandidaturasActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        sugerirTipo = preferences.getBoolean(KEY_SUGERIR_TIPO, sugerirTipo);
+        ultimoTipo  = preferences.getInt(KEY_ULTIMO_TIPO, ultimoTipo);
+    }
+
+    private void salvarSugerirTipo(boolean novoValor) {
+        SharedPreferences preferences = getSharedPreferences(CandidaturasActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putBoolean(KEY_SUGERIR_TIPO, novoValor);
+
+        editor.apply();
+
+        sugerirTipo = novoValor;
+    }
+
+    private void salvarUltimoTipo(int novoValor) {
+        SharedPreferences preferences = getSharedPreferences(CandidaturasActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putInt(KEY_ULTIMO_TIPO, novoValor);
+
+        editor.apply();
+
+        ultimoTipo = novoValor;
     }
 }

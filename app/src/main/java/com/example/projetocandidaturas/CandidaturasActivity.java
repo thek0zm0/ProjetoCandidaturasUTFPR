@@ -32,6 +32,7 @@ public class CandidaturasActivity extends AppCompatActivity {
     private ActionMode actionMode;
     private View viewSelecionada;
     private Drawable background;
+    public static final String ARQUIVO_PREFERENCIAS = "projetocandidaturas.PREFERENCIAS";
 
     private ActionMode.Callback callback = new ActionMode.Callback() {
         @Override
