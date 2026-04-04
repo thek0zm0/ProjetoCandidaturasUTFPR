@@ -1,7 +1,20 @@
-package com.example.projetocandidaturas;
+package com.example.projetocandidaturas.modelo;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import java.util.Objects;
+
+@Entity
 public class Candidatura {
 
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
+    @ColumnInfo(index = true)
+    @NonNull
     private String nomeCargo;
     private String empresa;
     private boolean indicacao;
@@ -56,6 +69,14 @@ public class Candidatura {
         this.faixaSalarial = faixaSalarial;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return nomeCargo  + '\n' +
@@ -63,5 +84,17 @@ public class Candidatura {
                 indicacao + '\n' +
                 regime    + '\n' +
                 faixaSalarial;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Candidatura that = (Candidatura) o;
+        return indicacao == that.indicacao && Objects.equals(nomeCargo, that.nomeCargo) && Objects.equals(empresa, that.empresa) && regime == that.regime && Objects.equals(faixaSalarial, that.faixaSalarial);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nomeCargo, empresa, indicacao, regime, faixaSalarial);
     }
 }

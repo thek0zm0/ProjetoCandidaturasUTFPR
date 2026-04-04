@@ -21,9 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 
+import com.example.projetocandidaturas.modelo.Candidatura;
+import com.example.projetocandidaturas.persistencia.CandidaturaDatabase;
 import com.example.projetocandidaturas.utils.UtilsAlert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CandidaturasActivity extends AppCompatActivity {
@@ -120,7 +121,9 @@ public class CandidaturasActivity extends AppCompatActivity {
 
     private void popularListaCandidaturas() {
 
-        listaCandidaturas = new ArrayList<>();
+        CandidaturaDatabase database = CandidaturaDatabase.getInstance(this);
+
+        listaCandidaturas = database.getCandidaturaDao().queryAllAscending();
 
         candidaturaAdapter = new CandidaturaAdapter(this, listaCandidaturas);
 
@@ -144,13 +147,11 @@ public class CandidaturasActivity extends AppCompatActivity {
 
                 if (bundle != null) {
 
-                    var nome      = bundle.getString(CandidaturaActivity.KEY_NOME);
-                    var empresa   = bundle.getString(CandidaturaActivity.KEY_EMPRESA);
-                    var indicacao = bundle.getBoolean(CandidaturaActivity.KEY_INDICACAO);
-                    var regime    = bundle.getString(CandidaturaActivity.KEY_REGIME);
-                    var faixa     = bundle.getInt(CandidaturaActivity.KEY_FAIXA);
+                    long id = bundle.getLong("KEY_ID");
 
-                    var candidatura = new Candidatura(nome, empresa, indicacao, ERegime.valueOf(regime), faixa);
+                    CandidaturaDatabase database = CandidaturaDatabase.getInstance(CandidaturasActivity.this);
+
+                    Candidatura candidatura = database.getCandidaturaDao().queryForId(id);
 
                     listaCandidaturas.add(candidatura);
 
@@ -223,19 +224,13 @@ public class CandidaturasActivity extends AppCompatActivity {
 
                 if (bundle != null) {
 
-                    var nome      = bundle.getString(CandidaturaActivity.KEY_NOME);
-                    var empresa   = bundle.getString(CandidaturaActivity.KEY_EMPRESA);
-                    var indicacao = bundle.getBoolean(CandidaturaActivity.KEY_INDICACAO);
-                    var regime    = bundle.getString(CandidaturaActivity.KEY_REGIME);
-                    var faixa     = bundle.getInt(CandidaturaActivity.KEY_FAIXA);
+                    long id = bundle.getLong("KEY_ID");
 
-                    var candidatura = listaCandidaturas.get(posicaoSelecionada);
+                    CandidaturaDatabase database = CandidaturaDatabase.getInstance(CandidaturasActivity.this);
 
-                    candidatura.setNomeCargo(nome);
-                    candidatura.setEmpresa(empresa);
-                    candidatura.setIndicacao(indicacao);
-                    candidatura.setRegime(ERegime.valueOf(regime));
-                    candidatura.setFaixaSalarial(faixa);
+                    Candidatura candidatura = database.getCandidaturaDao().queryForId(id);
+
+                    listaCandidaturas.set(posicaoSelecionada, candidatura);
 
                     posicaoSelecionada = -1;
 
@@ -258,16 +253,14 @@ public class CandidaturasActivity extends AppCompatActivity {
         Intent intentAbertura = new Intent(this, CandidaturaActivity.class);
 
         intentAbertura.putExtra(CandidaturaActivity.KEY_MODO, CandidaturaActivity.MODO_EDITAR);
-        intentAbertura.putExtra(CandidaturaActivity.KEY_NOME, candidatura.getNomeCargo());
-        intentAbertura.putExtra(CandidaturaActivity.KEY_EMPRESA, candidatura.getEmpresa());
-        intentAbertura.putExtra(CandidaturaActivity.KEY_INDICACAO, candidatura.isIndicacao());
-        intentAbertura.putExtra(CandidaturaActivity.KEY_REGIME, candidatura.getRegime().toString());
-        intentAbertura.putExtra(CandidaturaActivity.KEY_FAIXA, candidatura.getFaixaSalarial());
+        intentAbertura.putExtra(CandidaturaActivity.KEY_ID, candidatura.getId());
 
         launcherEditarCandidatura.launch(intentAbertura);
     }
 
     private void excluirCandidatura() {
+
+        final Candidatura candidatura = listaCandidaturas.get(posicaoSelecionada);
 
         final int posicaoParaRemover = posicaoSelecionada;
 
@@ -280,13 +273,21 @@ public class CandidaturasActivity extends AppCompatActivity {
         DialogInterface.OnClickListener listenerSim =  new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                CandidaturaDatabase database = CandidaturaDatabase.getInstance(CandidaturasActivity.this);
+
+                int quantidadeDelete = database.getCandidaturaDao().delete(candidatura);
+
+                if (quantidadeDelete != 1) {
+                    UtilsAlert.mostrarAviso(CandidaturasActivity.this, getString(R.string.erro_ao_excluir), null);
+                    return;
+                }
+
                 listaCandidaturas.remove(posicaoParaRemover);
                 candidaturaAdapter.notifyDataSetChanged();
                 if (actionMode != null) {
                     actionMode.finish();
                 }
-
-                posicaoSelecionada = -1;
             }
         };
 

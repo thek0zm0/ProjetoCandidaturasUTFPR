@@ -16,17 +16,16 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.projetocandidaturas.modelo.Candidatura;
+import com.example.projetocandidaturas.modelo.ERegime;
+import com.example.projetocandidaturas.persistencia.CandidaturaDatabase;
 import com.example.projetocandidaturas.utils.UtilsAlert;
 
 import java.util.Objects;
 
 public class CandidaturaActivity extends AppCompatActivity {
 
-    public static final String KEY_NOME         = "KEY_NOME";
-    public static final String KEY_EMPRESA      = "KEY_EMPRESA";
-    public static final String KEY_INDICACAO    = "KEY_INDICACAO";
-    public static final String KEY_REGIME       = "KEY_REGIME";
-    public static final String KEY_FAIXA        = "KEY_FAIXA";
+    public static final String KEY_ID           = "KEY_ID";
     public static final String KEY_MODO         = "KEY_MODO";
     public static final String KEY_SUGERIR_TIPO = "SUGERIR_TIPO";
     public static final String KEY_ULTIMO_TIPO  = "ULTIMO_TIPO";
@@ -38,7 +37,7 @@ public class CandidaturaActivity extends AppCompatActivity {
     private Spinner      spinner;
     private RadioButton  radioButtonPJ, radioButtonCLT;
     private int          modo;
-    private Candidatura  candidaturaOriginal;
+    private Candidatura candidaturaOriginal;
     private boolean      sugerirTipo;
     private int          ultimoTipo;
 
@@ -75,22 +74,22 @@ public class CandidaturaActivity extends AppCompatActivity {
             } else {
                 setTitle(getString(R.string.editar_candidatura));
 
-                var nome      = bundle.getString(CandidaturaActivity.KEY_NOME);
-                var empresa   = bundle.getString(CandidaturaActivity.KEY_EMPRESA);
-                var indicacao = bundle.getBoolean(CandidaturaActivity.KEY_INDICACAO);
-                var regime    = bundle.getString(CandidaturaActivity.KEY_REGIME);
-                var faixa     = bundle.getInt(CandidaturaActivity.KEY_FAIXA);
+                long id = bundle.getLong(KEY_ID);
 
-                candidaturaOriginal = new Candidatura(nome, empresa, indicacao, ERegime.valueOf(regime), faixa);
+                CandidaturaDatabase database = CandidaturaDatabase.getInstance(this);
 
-                editTextNome.setText(nome);
-                editTextEmpresa.setText(empresa);
-                checkBoxIndicacao.setChecked(indicacao);
-                spinner.setSelection(faixa);
+                candidaturaOriginal = database.getCandidaturaDao().queryForId(id);
 
-                if (Objects.equals(regime, ERegime.CLT.toString())) {
+                editTextNome.setText(candidaturaOriginal.getNomeCargo());
+                editTextEmpresa.setText(candidaturaOriginal.getEmpresa());
+                checkBoxIndicacao.setChecked(candidaturaOriginal.isIndicacao());
+                spinner.setSelection(candidaturaOriginal.getFaixaSalarial());
+
+                String stringRegime = candidaturaOriginal.getRegime().toString();
+
+                if (Objects.equals(stringRegime, ERegime.CLT.toString())) {
                     radioButtonCLT.setChecked(true);
-                } else if (Objects.equals(regime, ERegime.PJ.toString())){
+                } else if (Objects.equals(stringRegime, ERegime.PJ.toString())){
                     radioButtonPJ.setChecked(true);
                 }
             }
@@ -130,6 +129,7 @@ public class CandidaturaActivity extends AppCompatActivity {
         var isIndicacao = checkBoxIndicacao.isChecked();
 
         var radioButtonId = radioGroupReg.getCheckedRadioButtonId();
+
         ERegime regime;
 
         if (R.id.radioButtonPj == radioButtonId) {
@@ -150,26 +150,44 @@ public class CandidaturaActivity extends AppCompatActivity {
 
         var faixa = spinner.getSelectedItemPosition();
 
-        if (modo == MODO_EDITAR
-            && nome.equals(candidaturaOriginal.getNomeCargo())
-            && empresa.equals(candidaturaOriginal.getEmpresa())
-            && isIndicacao == candidaturaOriginal.isIndicacao()
-            && regime == candidaturaOriginal.getRegime()
-            && faixa == candidaturaOriginal.getFaixaSalarial()) {
+        Candidatura candidatura = new Candidatura(nome, empresa, isIndicacao, regime, faixa);
 
+        if (candidatura.equals(candidaturaOriginal)) {
             setResult(CandidaturaActivity.RESULT_CANCELED);
             finish();
             return;
         }
 
+        Intent intentResposta = new Intent();
+
+        CandidaturaDatabase database = CandidaturaDatabase.getInstance(this);
+
+        if (modo == MODO_NOVO) {
+            long novoId = database.getCandidaturaDao().inserir(candidatura);
+
+            if (novoId <= 0) {
+                UtilsAlert.mostrarAviso(this, getString(R.string.erro_ao_inserir), null);
+                return;
+            }
+
+            candidatura.setId(novoId);
+            intentResposta.putExtra(KEY_ID, candidatura.getId());
+
+        } else {
+
+            candidatura.setId(candidaturaOriginal.getId());
+
+            int editInt = database.getCandidaturaDao().update(candidatura);
+
+            if (editInt != 1) {
+                UtilsAlert.mostrarAviso(this, getString(R.string.erro_ao_editar), null);
+                return;
+            }
+        }
+
         salvarUltimoTipo(faixa);
 
-        Intent intentResposta = new Intent();
-        intentResposta.putExtra(KEY_NOME, nome);
-        intentResposta.putExtra(KEY_EMPRESA, empresa);
-        intentResposta.putExtra(KEY_INDICACAO, isIndicacao);
-        intentResposta.putExtra(KEY_REGIME, regime.toString());
-        intentResposta.putExtra(KEY_FAIXA, faixa);
+        intentResposta.putExtra(KEY_ID, candidatura.getId());
 
         setResult(CandidaturaActivity.RESULT_OK, intentResposta);
 

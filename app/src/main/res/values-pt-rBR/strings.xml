@@ -47,4 +47,7 @@
     <string name="sim">Sim</string>
     <string name="nao">Nao</string>
     <string name="deletar_confirmar">Você quer deletar?</string>
+    <string name="erro_ao_inserir">Erro ao inserir</string>
+    <string name="erro_ao_editar">Erro ao atualizar</string>
+    <string name="erro_ao_excluir">Erro ao excluir</string>
 </resources>

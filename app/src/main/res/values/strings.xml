@@ -46,4 +46,7 @@
     <string name="sim">Yes</string>
     <string name="nao">No</string>
     <string name="deletar_confirmar">Do you want to delete?</string>
+    <string name="erro_ao_inserir">Error trying to insert</string>
+    <string name="erro_ao_editar">Error trying to update</string>
+    <string name="erro_ao_excluir">Error trying to delete</string>
 </resources>
