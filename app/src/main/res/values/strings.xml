@@ -40,4 +40,10 @@
     <string name="excluir">Delete</string>
     <string name="editar_candidatura">Edit Application</string>
     <string name="sugerir_tipo">Suggest type</string>
+    <string name="aviso">Warning</string>
+    <string name="ok">OK</string>
+    <string name="confirmar">Confirm</string>
+    <string name="sim">Yes</string>
+    <string name="nao">No</string>
+    <string name="deletar_confirmar">Do you want to delete?</string>
 </resources>

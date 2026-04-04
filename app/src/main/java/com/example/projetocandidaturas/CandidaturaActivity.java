@@ -6,17 +6,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.projetocandidaturas.utils.UtilsAlert;
 
 import java.util.Objects;
 
@@ -106,7 +106,7 @@ public class CandidaturaActivity extends AppCompatActivity {
 
         editTextNome.requestFocus();
 
-        Toast.makeText(this, R.string.as_entrada_foram_apagadas, Toast.LENGTH_LONG).show();
+        UtilsAlert.mostrarAviso(this, R.string.as_entrada_foram_apagadas);
     }
 
     public void salvarValores() {
@@ -115,13 +115,14 @@ public class CandidaturaActivity extends AppCompatActivity {
         var empresa = editTextEmpresa.getText().toString();
 
         if (nome == null || nome.isBlank()) {
-            Toast.makeText(this, R.string.faltou_nome, Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.faltou_nome);
 
             editTextNome.requestFocus();
             return;
         }
         if (empresa == null || empresa.isBlank()) {
-            Toast.makeText(this, R.string.faltou_empresa, Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.faltou_empresa);
+
             editTextEmpresa.requestFocus();
             return;
         }
@@ -136,12 +137,14 @@ public class CandidaturaActivity extends AppCompatActivity {
         } else if (R.id.radioButtonClt == radioButtonId) {
             regime = ERegime.CLT;
         } else {
-            Toast.makeText(this, R.string.favor_selecionar_regime, Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.favor_selecionar_regime);
+
             return;
         }
 
         if (spinner.getSelectedItemPosition() == AdapterView.INVALID_POSITION) {
-            Toast.makeText(this, R.string.spinner_sem_valores, Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.spinner_sem_valores);
+
             return;
         }
 

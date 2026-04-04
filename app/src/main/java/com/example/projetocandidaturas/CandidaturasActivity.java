@@ -1,5 +1,6 @@
 package com.example.projetocandidaturas;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+
+import com.example.projetocandidaturas.utils.UtilsAlert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -265,8 +268,28 @@ public class CandidaturasActivity extends AppCompatActivity {
     }
 
     private void excluirCandidatura() {
-        listaCandidaturas.remove(posicaoSelecionada);
 
-        candidaturaAdapter.notifyDataSetChanged();
+        final int posicaoParaRemover = posicaoSelecionada;
+
+        if (posicaoParaRemover < 0 || posicaoParaRemover >= listaCandidaturas.size()) {
+            return;
+        }
+
+        String mensagem = getString(R.string.deletar_confirmar);
+
+        DialogInterface.OnClickListener listenerSim =  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                listaCandidaturas.remove(posicaoParaRemover);
+                candidaturaAdapter.notifyDataSetChanged();
+                if (actionMode != null) {
+                    actionMode.finish();
+                }
+
+                posicaoSelecionada = -1;
+            }
+        };
+
+        UtilsAlert.confirmarAcao(this, mensagem, listenerSim, null);
     }
 }

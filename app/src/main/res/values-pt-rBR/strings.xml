@@ -41,4 +41,10 @@
     <string name="excluir">Excluir</string>
     <string name="editar_candidatura">Editar Candidatura</string>
     <string name="sugerir_tipo">Sugerir tipo</string>
+    <string name="aviso">Aviso</string>
+    <string name="ok">OK</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Nao</string>
+    <string name="deletar_confirmar">Você quer deletar?</string>
 </resources>
